@@ -5,18 +5,21 @@ class Solution(object):
         :type nums2: List[int]
         :rtype: float
         """
-        # nums1.length == m
-        # nums2.length == n
-        # 0 <= m <= 1000
-        # 0 <= n <= 1000
-        # 1 <= m + n <= 2000
-        # -106 <= nums1[i], nums2[i] <= 106
+        ls1, ls2 = len(nums1), len(nums2)
+        if ls1 < ls2:
+            return self.findMedianSortedArrays(nums2, nums1)
+        l, r = 0, ls2 * 2
+        while l <= r:
+            mid2 = (l + r) >> 1
+            mid1 = ls1 + ls2 - mid2
+            L1 = -sys.maxint - 1 if mid1 == 0 else nums1[(mid1 - 1) >> 1]
+            L2 = -sys.maxint - 1 if mid2 == 0 else nums2[(mid2 - 1) >> 1]
+            R1 = sys.maxint if mid1 == 2 * ls1 else nums1[mid1 >> 1]
+            R2 = sys.maxint if mid2 == 2 * ls2 else nums2[mid2 >> 1]
+            if L1 > R2:
+                l = mid2 + 1
+            elif L2 > R1:
+                r = mid2 - 1
+            else:
+                return (max(L1, L2) + min(R1, R2)) / 2.0 
 
-        nums1.extend(nums2)
-        nums1.sort()
-        length = len(nums1)
-        if length % 2 == 0:
-            return (nums1[length // 2] + nums1[length // 2 - 1]) / 2
-        else:
-            return nums1[length // 2]
-            
